@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonuçlar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table thead {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        table td li {
+            text-align: left;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        table tbody td {
+            color: #333;
+        }
+
+        .btn-delete, .btn-update {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #d9534f;
+        }
+
+        .btn-delete:hover {
+            background-color: #c9302c;
+        }
+
+        .btn-update {
+            background-color: #f0ad4e;
+        }
+
+        .btn-update:hover {
+            background-color: #ec971f;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="{% url 'home' %}">Geri</a>
+    <h1>Sonuçlar</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Şehir</th>
+            <th>İlçe</th>
+            <th>Santral Bina</th>
+            <th>Lokasyon</th>
+            <th>Router</th>
+            <th>Adet</th>
+            <th>Port Sayısı</th>
+            <th>Bağlı Cihaz / Port</th>
+            <th>Bağlı Cihaz Lokasyon</th>
+            <th>Loopback IP</th>
+            <th>VLAN</th>
+            <th>Bağlantı</th>
+            <th>Enerji</th>
+            <th>Temos</th>
+            <th>İşlem</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for device in devices %}
+            <tr>
+                <td>{{ device.province.name|default:"" }}</td>
+                <td>{{ device.district.name|default:"" }}</td>
+                <td>{{ device.station|default:"" }}</td>
+                <td>{{ device.location_name|default:"" }} {{ device.location_floor|default:"" }}</td>
+                <td>{{ device.router_model|default:"" }}</td>
+                <td>{{ device.router_count|default:"" }}</td>
+                <td>{{ device.number_of_ports|default:"" }}</td>
+                <td>
+                    {% for router in device.connected_routers.all %}
+                        <li>{{ router.brand.name }} {{ router.model_name }}
+                            / {{ device.connection_port|default:"?" }}</li>
+                    {% endfor %}
+                </td>
+                <td>{{ device.connected_router_location|default:"" }}</td>
+                <td>{{ device.loopback_ip|default:"" }}</td>
+                <td>{{ device.vlan|default:"" }}</td>
+                <td>{{ device.connection|default:"" }}</td>
+                <td>{{ device.energy_type|default:"" }}</td>
+                <td>{{ device.temos|default:"" }}</td>
+                <td>
+                    <form action="{% url 'delete_device' device.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete" style="margin-bottom: 8px">Sil</button>
+                    </form>
+                    <a href="{% url 'update_device' device.id %}" style="text-decoration: none;" class="btn-update">Güncelle</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

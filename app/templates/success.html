@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Added</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 10px 0;
+            font-size: 1.2em;
+            display: block;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Device successfully added!</h1>
+    <a href="{% url 'add_device' %}">Add another device</a>
+    <a href="{% url 'query' %}">Query</a>
+    <a href="{% url 'home' %}">Home</a>
+</body>
+</html>

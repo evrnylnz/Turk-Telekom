@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .button-container {
+            margin: 20px 0;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #0056b3;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #004494;
+        }
+
+        .button:active {
+            background-color: #003d79;
+        }
+
+        .logout-form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Ana Sayfa</h1>
+    <div class="button-container">
+        <a href="{% url 'query' %}" class="button">Sorgu Sayfasına Git</a>
+        <a href="{% url 'add_device' %}" class="button">Veri Ekleme Sayfasına Git</a>
+
+        <!-- Logout Form -->
+        <form action="{% url 'logout' %}" method="post" class="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="button">Çıkış Yap</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
