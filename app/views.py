@@ -5,12 +5,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from openpyxl import Workbook
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 from .forms import *
 from .models import *
-
-from django.views.decorators.http import require_POST
 
 @login_required
 def update_device(request, device_id):
@@ -47,6 +47,74 @@ def add_device(request):
         form = DeviceForm()
     return render(request, 'add_device.html', {'form': form})
 
+
+@login_required
+def add_user(request):
+    if not request.user.is_staff:
+        return render(request, 'no_permission.html') 
+    
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user_type = form.cleaned_data['user_type']
+            if user_type == 'admin':
+                user.is_staff = True
+                user.is_superuser = True
+            user.save()
+            messages.success(request, f'User {user.username} has been created successfully!')
+            return render(request, 'user_created_success.html', {'username': user.username})
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'add_user.html', {'form': form})
+
+@login_required
+def edit_users(request):
+    if not request.user.is_staff:
+        return render(request, 'no_permission.html')
+    
+    users = User.objects.all()
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        user = User.objects.get(id=user_id)
+        user.delete()
+        messages.success(request, f'User {user.username} has been deleted successfully!')
+        return redirect('edit_users')
+    
+    return render(request, 'edit_users.html', {'users': users})
+
+@login_required
+def update_user_role(request, user_id):
+    if not request.user.is_staff:
+        return render(request, 'no_permission.html') 
+    
+    user = get_object_or_404(User, id=user_id)
+    
+    if request.method == 'POST':
+        role = request.POST.get('role')
+        if role == 'admin':
+            user.is_staff = True
+            user.is_superuser = True
+        else:
+            user.is_staff = False
+            user.is_superuser = False
+        user.save()
+        messages.success(request, f'User {user.username} role updated to {role.capitalize()}!')
+    
+    return redirect('edit_users')
+
+@login_required
+def delete_user(request, user_id):
+    if not request.user.is_staff:
+        return render(request, 'no_permission.html') 
+    
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, f'User {user.username} has been deleted successfully!')
+        return redirect('edit_users')
+
+    return redirect('edit_users')
 
 @require_POST
 @login_required

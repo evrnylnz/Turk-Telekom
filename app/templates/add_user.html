@@ -1,9 +1,10 @@
+<!-- templates/add_user.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Sayfa</title>
+    <title>Kullanıcı Ekle</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -18,7 +19,7 @@
         .container {
             max-width: 600px;
             margin: auto;
-            background: linear-gradient(130deg, #33ffac, #c3cfe2);
+            background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -29,8 +30,24 @@
             font-weight: 500;
         }
 
-        .button-container {
+        .form-container {
             margin: 20px 0;
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-container form input,
+        .form-container form select {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 400px;
         }
 
         .button {
@@ -41,7 +58,7 @@
             border-radius: 4px;
             text-decoration: none;
             font-size: 18px;
-            margin: 10px auto;
+            margin: 20px auto;
             transition: background-color 0.3s ease, transform 0.2s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 250px;
@@ -58,37 +75,25 @@
             transform: translateY(0);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
-        .logout-form {
-            display: inline-block;
-        }
-
-        .logout-form button.button {
-            background-color: #d9534f;
-        }
-
-        .logout-form button.button:hover {
-            background-color: #c9302c;
-        }
-
-        .logout-form button.button:active {
-            background-color: #ac2925;
-        }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('success-message')) {
+                setTimeout(function() {
+                    window.location.href = "{% url 'home' %}";
+                }, 1000);
+            }
+        });
+    </script>
 </head>
 <body>
 <div class="container">
-    <h1>Ana Sayfa</h1>
-    <div class="button-container">
-        <a href="{% url 'query' %}" class="button">Cihaz Sorgula</a>
-        <a href="{% url 'add_device' %}" class="button">Cihaz Ekleme</a>
-        <a href="{% url 'add_user' %}" class="button">Kullanıcı Ekle</a>
-        <a href="{% url 'edit_users' %}" class="button">Kullanıcı Düzenle</a>
-
-        <!-- Logout Form -->
-        <form action="{% url 'logout' %}" method="post" class="logout-form">
+    <h1>Kullanıcı Ekle</h1>
+    <div class="form-container">
+        <form method="post">
             {% csrf_token %}
-            <button type="submit" class="button">Çıkış</button>
+            {{ form.as_p }}
+            <button type="submit" class="button">Kaydet</button>
         </form>
     </div>
 </div>

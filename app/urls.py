@@ -3,6 +3,8 @@ from django.urls import path
 from .views import *
 
 from django.contrib.auth import views as auth_views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('delete_device/<int:device_id>/', delete_device, name='delete_device'),
@@ -21,4 +23,8 @@ urlpatterns = [
     path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('update-device/<int:device_id>/', update_device, name='update_device'), 
-]
+    path('add_user/', add_user, name='add_user'),
+    path('edit_users/', edit_users, name='edit_users'),
+    path('update-user-role/<int:user_id>/', update_user_role, name='update_user_role'),
+    path('delete-user/<int:user_id>/', delete_user, name='delete_user'),
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,6 +1,20 @@
 from django import forms
 from .models import Province, District, RouterBrand, Router, Device
 
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class UserRegistrationForm(UserCreationForm):
+    USER_TYPE_CHOICES = (
+        ('user', 'User'),
+        ('admin', 'Admin'),
+    )
+    user_type = forms.ChoiceField(choices=USER_TYPE_CHOICES)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2', 'user_type']
+
 class ProvinceForm(forms.ModelForm):
     class Meta:
         model = Province
